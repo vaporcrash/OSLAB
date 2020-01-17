@@ -97,6 +97,7 @@ void main (int argc,char *argv[]){
 					printf(" %ld ",dirstat.st_nlink);
 					printf(" %6ld ",dirstat.st_size);
 					printf(" %8ld ",dirstat.st_ino);
+					printf(" %15s",dirpointer->d_name);
 				}
 				printf("\n");
 			}
@@ -109,17 +110,47 @@ void main (int argc,char *argv[]){
 
 /*
 Output:
-shivanirudh@shiva-ideapad:~/Desktop/Semester4/OS/SystemCalls$ ./myls
+shivanirudh@shiva-ideapad:~/Desktop/Semester4/OSLAB/SystemCalls$ ./myls
 
 Enter path of directory: .
 
  mycp.c
  2-ex2-cmds.pdf
+ mygrep.c
  .
  dest.txt
+ CPUScheduling
+ SYSTEM_CALLS_MANUAL.pdf
+ a
+ grep.c
  mycp
  myls
+ ls
+ mygrep
  myls.c
  source.txt
  ..
+shivanirudh@shiva-ideapad:~/Desktop/Semester4/OSLAB/SystemCalls$ ./myls -l
+
+Enter path of directory: .
+-rw-rw--r- 1    2625   2363958           mycp.c
+-rw-rw--r- 1   44937   3670881   2-ex2-cmds.pdf
+-rw-r---r- 1    1358   2363973         mygrep.c
+drwxr-xxr- 3    4096   2363810                .
+-r--rw-xr- 1      24   2360766         dest.txt
+drwxr-xxr- 2    4096   2368128    CPUScheduling
+-rw-rw--r- 1   19896   3670880  SYSTEM_CALLS_MANUAL.pdf
+-rwxrwxxr- 1   12920   2360763                a
+-rw-r---r- 1    2506   2360758           grep.c
+-rwxrwxxr- 1   12840   2360764             mycp
+-rwxrwxxr- 1   12992   2360767             myls
+-rwxrwxxr- 1   12992   2368119               ls
+-rwxrwxxr- 1    8560   2363966           mygrep
+-rw-r---r- 1    2864   2363972           myls.c
+-rw-rw--r- 1      24   2363959       source.txt
+drwxr-xxr- 6    4096   2363963               ..
+shivanirudh@shiva-ideapad:~/Desktop/Semester4/OSLAB/SystemCalls$ ./myls -R
+
+Enter path of directory: .
+mycp.c	2-ex2-cmds.pdf	mygrep.c	.	dest.txt	CPUScheduling	SYSTEM_CALLS_MANUAL.pdf	a	grep.c	mycp	myls	ls	mygrep	myls.c	source.txt	..	
 */
