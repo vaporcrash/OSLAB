@@ -7,9 +7,11 @@ struct Job{
 	char *PID;
 	double arrivalTime;
 	double burstTime;
+	double dummy;
 	double waitTime;
 	double turnTime;
 	double responseTime;
+	int nope;
 };
 
 typedef struct Job Process;
@@ -19,9 +21,11 @@ void initialise(Process *p){
 	p->PID=(char*)malloc(100*sizeof(char));
 	p->arrivalTime=0.0;
 	p->burstTime=0.0;
+	p->dummy=0.0;
 	p->waitTime=0.0;
 	p->turnTime=0.0;
-	p->responseTime=0.0;
+	p->responseTime=-1.0;
+	p->nope=0;
 }
 
 //Accepting data of each process
@@ -29,6 +33,7 @@ void acceptProcess(Process *p){
 	printf("\n Enter Process ID: ");scanf(" %s",p->PID);
 	printf("\n Enter arrival time: ");scanf("%lf",&p->arrivalTime);
 	printf("\n Enter burst time: ");scanf("%lf",&p->burstTime);
+	p->dummy=p->burstTime;
 }
 
 //Display Processes
@@ -72,6 +77,47 @@ void displayGanttChart(char *Gantt_Chart[],int number_of_interval,double start_t
 	printf("\n\n");
 }
 
+//Print Wait Time
+void printWaitTime(Process P[],int number_of_processes){
+	int i=0;
+	double sum=0.0;
+	printf("\n Wait Time:\n");
+	for(i=0;i<number_of_processes;i++){
+		printf(" %-5.2lf",P[i].waitTime);
+		sum+=P[i].waitTime;
+	}
+	printf("\nAverage: %-5.2lf",sum/number_of_processes);
+	printf("\n");
+}
+
+//Print Turnaround Time
+void printTurnTime(Process P[],int number_of_processes){
+	int i=0;
+	double sum=0.0;
+	printf("\n Turnaround Time:\n");
+	for(i=0;i<number_of_processes;i++){
+		printf(" %-5.2lf",P[i].turnTime);
+		sum+=P[i].turnTime;
+	}
+	printf("\nAverage: %-5.2lf",sum/number_of_processes);
+	printf("\n");
+}
+
+//Print Response Time
+void printRespTime(Process P[],int number_of_processes){
+	int i=0;
+	double sum=0.0;
+	printf("\n Response Time:\n");
+	for(i=0;i<number_of_processes;i++){
+		if(P[i].responseTime<0)
+			P[i].responseTime=0.0;
+		printf(" %-5.2lf",P[i].responseTime);
+		sum+=P[i].responseTime;
+	}
+	printf("\nAverage: %-5.2lf",sum/number_of_processes);
+	printf("\n");
+}
+
 //FCFS Scheduling
 void FCFS(Process P[],int number_of_processes){
 	char *Gantt_Chart[100];
@@ -92,11 +138,16 @@ void FCFS(Process P[],int number_of_processes){
 			start_times[interval]=end_times[interval-1];
 		}
 		end_times[interval]=start_times[interval]+P[i].burstTime;
+		P[i].waitTime=start_times[interval]-P[i].arrivalTime;
+		P[i].turnTime=P[i].waitTime+P[i].burstTime;
+		P[i].responseTime=P[i].waitTime;
 		interval++;
 	}
 
 	displayGanttChart(Gantt_Chart,interval,start_times,end_times);
-
+	printWaitTime(P,number_of_processes);
+	printTurnTime(P,number_of_processes);
+	printRespTime(P,number_of_processes);
 }
 
 //Sorting on Burst time
@@ -153,11 +204,22 @@ void Non_PreSJF(Process P[],int number_of_processes){
 				start_times[interval]=end_times[interval-1];
 			}
 			end_times[interval]=start_times[interval]+tmp[i].burstTime;
+			int j=0;
+			for(j=0;j<number_of_processes;j++){
+				if(strcmp(tmp[i].PID,P[j].PID)==0){
+					P[j].waitTime=start_times[interval]-P[j].arrivalTime;
+					P[j].turnTime=P[j].waitTime+P[j].dummy;
+					P[j].responseTime=P[j].waitTime;
+				}
+			}
 			interval++;
 		}
 		time=end_times[interval-1];
 	}
 	displayGanttChart(Gantt_Chart,interval,start_times,end_times);
+	printWaitTime(P,number_of_processes);
+	printTurnTime(P,number_of_processes);
+	printRespTime(P,number_of_processes);
 }
 
 //SJF Preemptive Scheduling
@@ -178,7 +240,8 @@ void PreSJF(Process P[],int number_of_processes){
 	double end_times[100];
 
 	for(int time=0;time<sum;time++){
-		
+		int flag=0;
+
 		Process tmp[100];
 		for(int i=0;i<100;i++)
 			initialise(&tmp[i]);
@@ -199,6 +262,7 @@ void PreSJF(Process P[],int number_of_processes){
 		if(interval==0){
 			strcpy(Gantt_Chart[interval],tmp[0].PID);
 			start_times[interval]=0;
+			flag=1;
 			interval++;
 		}
 		else{
@@ -206,12 +270,35 @@ void PreSJF(Process P[],int number_of_processes){
 				end_times[interval-1]=time;
 				strcpy(Gantt_Chart[interval],tmp[0].PID);
 				start_times[interval]=end_times[interval-1];
+				flag=1;
 				interval++;
+			}
+		}
+		int j=0;
+		for(j=0;j<number_of_processes;j++){
+			if(flag&&strcmp(tmp[0].PID,P[j].PID)==0){
+				P[j].waitTime+=start_times[interval-1]-P[j].arrivalTime;
+				if(P[j].waitTime>0.0){
+					P[j].nope++;
+					P[j].waitTime-=(P[j].dummy-P[j].burstTime-P[j].nope);
+					printf("\n%s %d",P[j].PID,P[j].nope);
+					if(P[j].nope>1){
+						printf("\nHI\n");
+						P[j].waitTime-=P[j].nope;
+					}
+				}
+
+				P[j].turnTime=P[j].waitTime+P[j].dummy;
+				if(P[j].responseTime<0.0)
+					P[j].responseTime=start_times[interval-1]-P[j].arrivalTime;
 			}
 		}
 	}
 	end_times[interval-1]=sum;
 	displayGanttChart(Gantt_Chart,interval,start_times,end_times);
+	printWaitTime(P,number_of_processes);
+	printTurnTime(P,number_of_processes);
+	printRespTime(P,number_of_processes);
 }
 
 
@@ -220,33 +307,75 @@ int main(){
 	printf("\n\t\tCPU SCHEDULING ALGORITHMS\n");
 	Process p[100];
 	int number_of_processes;
-
-	printf("\nEnter the number_of_processes:");scanf("%d",&number_of_processes);
-	printf("\nEnter the details of the processes:");
+int algo_option;
+	do{
+		printf("\nChoose your scheduling algorithm ");
+		printf("\n1. FCFS\n2. SJF\n0. Exit\n Your Choice: ");
+		scanf("%d",&algo_option);
 	
-	for(int i=0;i<number_of_processes;i++){
-		initialise(&p[i]);
-		acceptProcess(&p[i]);
-	}
-
-	Process FCFSp[100];
-	for(int i=0;i<number_of_processes;i++){
-		initialise(&FCFSp[i]);
-		FCFSp[i]=p[i];
-	}
-	FCFS(FCFSp,number_of_processes);
+		//FCFS Scheduling
+		if(algo_option==1){
+			printf("\nEnter the number_of_processes:");scanf("%d",&number_of_processes);
+			printf("\nEnter the details of the processes:");
 	
-	Process NSJFp[100];
-	for(int i=0;i<number_of_processes;i++){
-		initialise(&NSJFp[i]);
-		NSJFp[i]=p[i];
-	}
-	Non_PreSJF(NSJFp,number_of_processes);
+			int i;
+			for(i=0;i<number_of_processes;i++){
+				initialise(&p[i]);
+				acceptProcess(&p[i]);
+			}
+			
+			Process FCFSp[100];
+			for(i=0;i<number_of_processes;i++){
+				initialise(&FCFSp[i]);
+				FCFSp[i]=p[i];
+			}
+			printf("\n FCFS Scheduling Output:\n ");
+			FCFS(FCFSp,number_of_processes);
 	
-	Process SJFp[100];
-	for(int i=0;i<number_of_processes;i++){
-		initialise(&SJFp[i]);
-		SJFp[i]=p[i];
-	}
-	PreSJF(SJFp,number_of_processes);
+		}
+		//SJF Scheduling
+		else if(algo_option==2){
+			printf("\nEnter the number_of_processes:");scanf("%d",&number_of_processes);
+			printf("\nEnter the details of the processes:");
+	
+			int i;
+			for(i=0;i<number_of_processes;i++){
+				initialise(&p[i]);
+				acceptProcess(&p[i]);
+			}
+		
+			char preemp_option;
+			printf("\n Use Pre-emption? y/n");scanf(" %c",&preemp_option);
+			//Non preemptive SJF Scheduling
+			if(preemp_option=='n'||preemp_option=='N'){
+			
+				Process NSJFp[100];
+				for(i=0;i<number_of_processes;i++){
+					initialise(&NSJFp[i]);
+					NSJFp[i]=p[i];
+				}
+			
+				printf("\n Non-preemptive SJF Scheduling Output:\n ");
+				Non_PreSJF(NSJFp,number_of_processes);
+			}
+			//Preemptive SJF Scheduling
+			else if(preemp_option=='y'||preemp_option=='Y'){
+				Process SJFp[100];
+				for(i=0;i<number_of_processes;i++){
+					initialise(&SJFp[i]);
+					SJFp[i]=p[i];
+				}
+			
+				printf("\n Preemptive SJF Scheduling Output:\n ");
+				PreSJF(SJFp,number_of_processes);
+			}
+			else{
+				printf("\n Invalid choice\n");
+			}
+		}
+		else if(algo_option!=0){
+			printf("\n Invalid option\n");
+		}
+		else;
+	}while(algo_option);
 }
