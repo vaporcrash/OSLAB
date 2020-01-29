@@ -1,3 +1,5 @@
+/*Develop a menu driven C program to implement the CPU Scheduling Algorithms
+FCFS and SJF (Non-Preemptive and Preemptive)*/
 #include<stdio.h>
 #include <stdlib.h>
 #include<string.h>
@@ -281,9 +283,7 @@ void PreSJF(Process P[],int number_of_processes){
 				if(P[j].waitTime>0.0){
 					P[j].nope++;
 					P[j].waitTime-=(P[j].dummy-P[j].burstTime-P[j].nope);
-					printf("\n%s %d",P[j].PID,P[j].nope);
 					if(P[j].nope>1){
-						printf("\nHI\n");
 						P[j].waitTime-=P[j].nope;
 					}
 				}
@@ -345,7 +345,7 @@ int algo_option;
 			}
 		
 			char preemp_option;
-			printf("\n Use Pre-emption? y/n");scanf(" %c",&preemp_option);
+			printf("\n Use Pre-emption? y/n ");scanf(" %c",&preemp_option);
 			//Non preemptive SJF Scheduling
 			if(preemp_option=='n'||preemp_option=='N'){
 			
@@ -379,3 +379,198 @@ int algo_option;
 		else;
 	}while(algo_option);
 }
+
+/*
+Output:
+shivanirudh@shiva-ideapad:~/Desktop/Semester4/OSLAB/CPUScheduling$ gcc Scheduling.c -o a
+shivanirudh@shiva-ideapad:~/Desktop/Semester4/OSLAB/CPUScheduling$ ./a
+
+		CPU SCHEDULING ALGORITHMS
+
+Choose your scheduling algorithm 
+1. FCFS
+2. SJF
+0. Exit
+ Your Choice: 1
+
+Enter the number_of_processes:5
+
+Enter the details of the processes:
+ Enter Process ID: p1
+
+ Enter arrival time: 0
+
+ Enter burst time: 8
+
+ Enter Process ID: p2
+
+ Enter arrival time: 1
+
+ Enter burst time: 6
+
+ Enter Process ID: p3
+
+ Enter arrival time: 2
+
+ Enter burst time: 1
+
+ Enter Process ID: p4
+
+ Enter arrival time: 3
+
+ Enter burst time: 9
+
+ Enter Process ID: p5
+
+ Enter arrival time: 4
+
+ Enter burst time: 3
+
+ FCFS Scheduling Output:
+ 
+ Gantt_Chart:
+___________________________________________________________________________
+|_____  p1_____|_____  p2_____|_____  p3_____|_____  p4_____|_____  p5_____|
+0              8              14             15             24             27             
+
+
+ Wait Time:
+ 0.00  7.00  12.00 12.00 20.00
+Average: 10.20
+
+ Turnaround Time:
+ 8.00  13.00 13.00 21.00 23.00
+Average: 15.60
+
+ Response Time:
+ 0.00  7.00  12.00 12.00 20.00
+Average: 10.20
+
+Choose your scheduling algorithm 
+1. FCFS
+2. SJF
+0. Exit
+ Your Choice: 2
+
+Enter the number_of_processes:5
+
+Enter the details of the processes:
+ Enter Process ID: p1
+
+ Enter arrival time: 0
+
+ Enter burst time: 8
+
+ Enter Process ID: p2
+
+ Enter arrival time: 1
+
+ Enter burst time: 6
+
+ Enter Process ID: p3
+
+ Enter arrival time: 2
+
+ Enter burst time: 1
+
+ Enter Process ID: p4
+
+ Enter arrival time: 3
+
+ Enter burst time: 9
+
+ Enter Process ID: p5
+
+ Enter arrival time: 4
+
+ Enter burst time: 3
+
+ Use Pre-emption? y/n n
+
+ Non-preemptive SJF Scheduling Output:
+ 
+ Gantt_Chart:
+___________________________________________________________________________
+|_____  p1_____|_____  p3_____|_____  p5_____|_____  p2_____|_____  p4_____|
+0              8              9              12             18             27             
+
+
+ Wait Time:
+ 0.00  11.00 6.00  15.00 5.00 
+Average: 7.40 
+
+ Turnaround Time:
+ 8.00  17.00 7.00  24.00 8.00 
+Average: 12.80
+
+ Response Time:
+ 0.00  11.00 6.00  15.00 5.00 
+Average: 7.40 
+
+Choose your scheduling algorithm 
+1. FCFS
+2. SJF
+0. Exit
+ Your Choice: 2
+
+Enter the number_of_processes:5
+
+Enter the details of the processes:
+ Enter Process ID: p1
+
+ Enter arrival time: 0
+
+ Enter burst time: 8
+
+ Enter Process ID: p2
+
+ Enter arrival time: 1
+
+ Enter burst time: 6
+
+ Enter Process ID: p3
+
+ Enter arrival time: 2
+
+ Enter burst time: 1
+
+ Enter Process ID: p4
+
+ Enter arrival time: 3
+
+ Enter burst time: 9
+
+ Enter Process ID: p5
+
+ Enter arrival time: 4
+
+ Enter burst time: 3
+
+ Use Pre-emption? y/n y
+
+ Preemptive SJF Scheduling Output:
+ 
+ Gantt_Chart:
+________________________________________________________________________________________________________________________
+|_____  p1_____|_____  p2_____|_____  p3_____|_____  p2_____|_____  p5_____|_____  p2_____|_____  p1_____|_____  p4_____|
+0              1              2              3              4              7              11             18             27             
+
+
+ Wait Time:
+ 10.00 4.00  0.00  15.00 0.00 
+Average: 5.80 
+
+ Turnaround Time:
+ 18.00 10.00 1.00  24.00 3.00 
+Average: 11.20
+
+ Response Time:
+ 0.00  0.00  0.00  15.00 0.00 
+Average: 3.00 
+
+Choose your scheduling algorithm 
+1. FCFS
+2. SJF
+0. Exit
+ Your Choice: 0
+*/
