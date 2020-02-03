@@ -20,6 +20,8 @@ int algo_option;
 				initialise(&p[i]);
 				acceptProcess(&p[i]);
 			}
+			int tq;
+			printf("\nEnter the time quantum: ");scanf("%d",&tq);
 			
 			Process RRp[100];
 			for(i=0;i<number_of_processes;i++){
@@ -27,7 +29,7 @@ int algo_option;
 				RRp[i]=p[i];
 			}
 			printf("\n Round Robin Scheduling Output:\n ");
-			RoundRobin(RRp,number_of_processes);
+			RoundRobin(RRp,number_of_processes,tq);
 	
 		}
 		//Priority Scheduling

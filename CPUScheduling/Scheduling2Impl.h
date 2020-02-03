@@ -11,6 +11,7 @@ void initialise(Process *p){
 	p->responseTime=-1.0;
 	p->priority=0;
 	p->nope=0;
+	p->chance=0;
 }
 
 //Accepting data of each process
@@ -258,6 +259,121 @@ void Priority(Process P[],int number_of_processes){
 }
 
 //Round Robin Scheduling
-void RoundRobin(Process P[],int number_of_processes){
+void RoundRobin(Process P[],int number_of_processes,int tq){
+	//Total time of execution
+	double sum=0;
+	for(int i=0;i<number_of_processes;i++)
+		sum+=P[i].burstTime;
+	
+	//Gantt chart
+	char *Gantt_Chart[100];
+	for(int i=0;i<100;i++)
+		Gantt_Chart[i]=(char*)malloc(10*sizeof(char));
+	
+	//Start and end times of processes
+	int interval=0;
+	double start_times[100];
+	double end_times[100];
+	
+	Queue RQ;
+	initialiseQueue(&RQ);
+	
+	for(int time=0;time<sum;){
+		
+		for(int i=0;i<number_of_processes;i++){
+			if(isEmpty(&RQ)){
+				if(P[i].arrivalTime<=time&&P[i].burstTime>0&&P[i].chance==0){
+					enqueue(&RQ,P[i]);
+					P[i].chance=1;
+				}
+			}
+			else{
+				if(P[i].arrivalTime<=time&&P[i].burstTime>0&&P[i].chance==0&&!checkQueue(P[i],&RQ)){
+					enqueue(&RQ,P[i]);
+					P[i].chance=1;
+				}
+			}
+		}
+		printf("\n%d\n",time);
+		display(&RQ);
+		printf("\n");
+		
+		Process DQ;
+		initialise(&DQ);
+		if(isEmpty(&RQ))
+			break;
+		while(isEmpty(&RQ)==0){
+			printf("\n");
+			printf("\n%d\n",time);
+			display(&RQ);
+			printf("\n");
+			DQ=dequeue(&RQ);
+			strcpy(Gantt_Chart[interval],DQ.PID);
+			if(interval==0){
+				start_times[interval]=0;
+			}
+			else{
+				start_times[interval]=end_times[interval-1];
+			}
+			
+			for(int i=0;i<number_of_processes;i++){
+				if(strcmp(P[i].PID,Gantt_Chart[interval])==0){
+					if(P[i].burstTime<tq)
+						end_times[interval]=start_times[interval]+P[i].burstTime;
+					else
+						end_times[interval]=start_times[interval]+tq;
+					P[i].burstTime-=tq;
+					P[i].burstTime=(P[i].burstTime<0)?0:P[i].burstTime;
+				}
+			}
+			time=end_times[interval];
+			interval++;
+			int j=0;
+			
+			for(j=0;j<number_of_processes;j++){
+				if(strcmp(DQ.PID,P[j].PID)==0){
+					P[j].waitTime+=start_times[interval-1]-P[j].arrivalTime;
+					if(P[j].waitTime>0.0){
+						P[j].nope++;
+						P[j].waitTime-=(P[j].dummy-P[j].burstTime-P[j].nope);
+						if(P[j].nope>1){
+							P[j].waitTime-=P[j].nope;
+						}
+					}
 
+					P[j].turnTime=P[j].waitTime+P[j].dummy;
+					if(P[j].responseTime<0.0)
+						P[j].responseTime=start_times[interval-1]-P[j].arrivalTime;
+				}
+			}
+			
+			for(int i=0;i<number_of_processes;i++){
+				if(isEmpty(&RQ)){
+					if(P[i].arrivalTime<=time&&P[i].burstTime>0&&P[i].chance==0){
+						enqueue(&RQ,P[i]);
+						P[i].chance=1;
+					}
+				}
+				else{
+					if(P[i].arrivalTime<=time&&P[i].burstTime>0&&P[i].chance==0&&!checkQueue(P[i],&RQ)){
+						enqueue(&RQ,P[i]);
+						P[i].chance=1;
+					}
+				}
+
+			}
+			for(int i=0;i<number_of_processes;i++){
+				if(strcmp(DQ.PID,P[i].PID)==0)
+					if(P[i].burstTime>0)
+						enqueue(&RQ,P[i]);
+			}
+			
+		}
+		
+	}
+	end_times[interval-1]=sum;
+	displayGanttChart(Gantt_Chart,interval,start_times,end_times);
+	printWaitTime(P,number_of_processes);
+	printTurnTime(P,number_of_processes);
+	printRespTime(P,number_of_processes);
 }
