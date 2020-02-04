@@ -294,19 +294,13 @@ void RoundRobin(Process P[],int number_of_processes,int tq){
 				}
 			}
 		}
-		printf("\n%d\n",time);
-		display(&RQ);
-		printf("\n");
 		
 		Process DQ;
 		initialise(&DQ);
 		if(isEmpty(&RQ))
 			break;
 		while(isEmpty(&RQ)==0){
-			printf("\n");
-			printf("\n%d\n",time);
-			display(&RQ);
-			printf("\n");
+		
 			DQ=dequeue(&RQ);
 			strcpy(Gantt_Chart[interval],DQ.PID);
 			if(interval==0){
@@ -332,11 +326,16 @@ void RoundRobin(Process P[],int number_of_processes,int tq){
 			
 			for(j=0;j<number_of_processes;j++){
 				if(strcmp(DQ.PID,P[j].PID)==0){
+					
 					P[j].waitTime+=start_times[interval-1]-P[j].arrivalTime;
-					if(P[j].waitTime>0.0){
+
+					if(P[j].burstTime>0)
 						P[j].nope++;
+					if(P[j].waitTime>0.0){
 						P[j].waitTime-=(P[j].dummy-P[j].burstTime-P[j].nope);
-						if(P[j].nope>1){
+						if(P[j].waitTime<0.0)
+							P[j].waitTime+=(P[j].dummy-P[j].burstTime);
+						if(P[j].nope>=1){
 							P[j].waitTime-=P[j].nope;
 						}
 					}

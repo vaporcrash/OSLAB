@@ -9,11 +9,11 @@ struct Job{
 	char *PID;
 	double arrivalTime;
 	double burstTime;
-	double dummy;
+	double dummy;  //Copy of burst time
 	double waitTime;
 	double turnTime;
 	double responseTime;
-	int nope;
+	int nope;      //Number of pre-emptions
 };
 
 typedef struct Job Process;
@@ -121,7 +121,15 @@ void printRespTime(Process P[],int number_of_processes){
 }
 
 //FCFS Scheduling
+/*Logic:
+1.Maintain arrays for start and end times of the intervals in the Gantt chart
+2.Sort the processes based on their arrival times
+3.Insert the processes into the Gantt chart
+4.Assign start and end times for the intervals
+5.Compute wait, response and turnaround times
+*/
 void FCFS(Process P[],int number_of_processes){
+	//Step 1.
 	char *Gantt_Chart[100];
 	for(int i=0;i<100;i++)
 		Gantt_Chart[i]=(char*)malloc(10*sizeof(char));
@@ -130,9 +138,14 @@ void FCFS(Process P[],int number_of_processes){
 	double start_times[100];
 	double end_times[100];
 
+	//Step 2.
 	sortOnArrivalTime(P,0,number_of_processes);
+	
+	//Step 3.
 	for(int i=0;i<number_of_processes;i++){
 		strcpy(Gantt_Chart[interval],P[i].PID);
+		
+		//Step 4.
 		if(interval==0){
 			start_times[interval]=0;
 		}
@@ -140,6 +153,8 @@ void FCFS(Process P[],int number_of_processes){
 			start_times[interval]=end_times[interval-1];
 		}
 		end_times[interval]=start_times[interval]+P[i].burstTime;
+		
+		//Step 5.
 		P[i].waitTime=start_times[interval]-P[i].arrivalTime;
 		P[i].turnTime=P[i].waitTime+P[i].burstTime;
 		P[i].responseTime=P[i].waitTime;
@@ -166,6 +181,19 @@ void sortOnBurstTime(Process p[],int number_of_processes){
 }
 
 //SJF Non-preemptive Scheduling
+/*Logic:
+1.Maintain arrays for start and end times of the intervals in the Gantt chart
+2.Run a timer from 0 to total time taken
+3.At each iteration, check which processes have arrived and store them in a temporary array. Make the processes' burst time as zero
+4.Sort the temporary array on basis of the processes' burst time
+5.Insert the processes in the temporary array into the Gantt chart
+5.Insert the process at the zeroth index, i.e, the first process into the Gantt chart
+	5.1 If the process previously inserted is the same as the next one to be inserted, move interval appropriately
+6.Assign start and end times for the intervals
+7.Move the value of time to the end time of that interval
+8.Repeat procedure 3. to 7. till timer reaches the end of the total time
+9.Compute wait, response and turnaround times
+*/
 void Non_PreSJF(Process P[],int number_of_processes){
 	//Total time of execution
 	double sum=0;
@@ -178,16 +206,19 @@ void Non_PreSJF(Process P[],int number_of_processes){
 		Gantt_Chart[i]=(char*)malloc(10*sizeof(char));
 
 	//Start and end times of processes
+	//Step 1.
 	int interval=0;
 	double start_times[100];
 	double end_times[100];
 
+	//Step 2.
 	for(int time=0;time<sum;){
 		
 		Process tmp[100];
 		for(int i=0;i<100;i++)
 			initialise(&tmp[i]);
 
+		//Step 3.
 		int tctr=0;
 		for(int i=0;i<number_of_processes;i++)
 			if(P[i].arrivalTime<=time&&P[i].burstTime){
@@ -195,10 +226,14 @@ void Non_PreSJF(Process P[],int number_of_processes){
 				P[i].burstTime=0;
 			}
 
+		//Step 4.
 		sortOnBurstTime(tmp,tctr);
 		
+		//Step 5.
 		for(int i=0;i<tctr;i++){
 			strcpy(Gantt_Chart[interval],tmp[i].PID);
+			
+			//Step 6.
 			if(interval==0){
 				start_times[interval]=0;
 			}
@@ -209,6 +244,8 @@ void Non_PreSJF(Process P[],int number_of_processes){
 			int j=0;
 			for(j=0;j<number_of_processes;j++){
 				if(strcmp(tmp[i].PID,P[j].PID)==0){
+					
+					//Step 8.
 					P[j].waitTime=start_times[interval]-P[j].arrivalTime;
 					P[j].turnTime=P[j].waitTime+P[j].dummy;
 					P[j].responseTime=P[j].waitTime;
@@ -216,6 +253,7 @@ void Non_PreSJF(Process P[],int number_of_processes){
 			}
 			interval++;
 		}
+		//Step 7.
 		time=end_times[interval-1];
 	}
 	displayGanttChart(Gantt_Chart,interval,start_times,end_times);
@@ -225,6 +263,18 @@ void Non_PreSJF(Process P[],int number_of_processes){
 }
 
 //SJF Preemptive Scheduling
+/*Logic:
+1.Maintain arrays for start and end times of the intervals in the Gantt chart
+2.Run a timer from 0 to total time taken
+3.At each iteration, check which processes have arrived and store them in a temporary array. Decrement burst time of processes properly.
+4.Sort the temporary array on basis of the processes' burst time
+5.Insert the process at the zeroth index, i.e, the first process into the Gantt chart
+	5.1 If the process previously inserted is the same as the next one to be inserted, move interval appropriately
+6.Assign start and end times for the intervals
+7.Move the value of time to the end time of that interval
+8.Repeat procedure 3. to 7. till timer reaches the end of the total time
+9.Compute wait, response and turnaround times
+*/
 void PreSJF(Process P[],int number_of_processes){
 	//Total time of execution
 	double sum=0;
@@ -237,10 +287,13 @@ void PreSJF(Process P[],int number_of_processes){
 		Gantt_Chart[i]=(char*)malloc(10*sizeof(char));
 
 	//Start and end times of processes
+	//Step 1.
 	int interval=0;
 	double start_times[100];
 	double end_times[100];
 
+	//Step 2.
+	//Step 7. time++
 	for(int time=0;time<sum;time++){
 		int flag=0;
 
@@ -248,12 +301,14 @@ void PreSJF(Process P[],int number_of_processes){
 		for(int i=0;i<100;i++)
 			initialise(&tmp[i]);
 
+		//Step 3.
 		int tctr=0;
 		for(int i=0;i<number_of_processes;i++)
 			if(P[i].arrivalTime<=time&&P[i].burstTime){
 				tmp[tctr++]=P[i];
 			}
 
+		//Step 4.
 		sortOnBurstTime(tmp,tctr);
 
 		for(int i=0;i<number_of_processes;i++){
@@ -261,6 +316,7 @@ void PreSJF(Process P[],int number_of_processes){
 				P[i].burstTime--;
 		}
 
+		//Step 5.
 		if(interval==0){
 			strcpy(Gantt_Chart[interval],tmp[0].PID);
 			start_times[interval]=0;
@@ -268,6 +324,8 @@ void PreSJF(Process P[],int number_of_processes){
 			interval++;
 		}
 		else{
+			//Step 5.1
+			//Step 6.
 			if(strcmp(Gantt_Chart[interval-1],tmp[0].PID)!=0){
 				end_times[interval-1]=time;
 				strcpy(Gantt_Chart[interval],tmp[0].PID);
@@ -276,6 +334,7 @@ void PreSJF(Process P[],int number_of_processes){
 				interval++;
 			}
 		}
+		//Step 9.
 		int j=0;
 		for(j=0;j<number_of_processes;j++){
 			if(flag&&strcmp(tmp[0].PID,P[j].PID)==0){

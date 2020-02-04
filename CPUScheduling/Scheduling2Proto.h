@@ -10,13 +10,13 @@ struct Job{
 	char *PID;
 	double arrivalTime;
 	double burstTime;
-	double dummy;
+	double dummy;     //Copy of burst time
 	double waitTime;
 	double turnTime;
 	double responseTime;
 	int priority;
-	int nope;
-	int chance;
+	int nope;        //Number of pre-emptions
+	int chance;      //Keep track of chance of process in Round Robin scheduling
 };
 
 typedef struct Job Process;
