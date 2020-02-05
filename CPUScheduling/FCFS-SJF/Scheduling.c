@@ -187,8 +187,6 @@ void sortOnBurstTime(Process p[],int number_of_processes){
 3.At each iteration, check which processes have arrived and store them in a temporary array. Make the processes' burst time as zero
 4.Sort the temporary array on basis of the processes' burst time
 5.Insert the processes in the temporary array into the Gantt chart
-5.Insert the process at the zeroth index, i.e, the first process into the Gantt chart
-	5.1 If the process previously inserted is the same as the next one to be inserted, move interval appropriately
 6.Assign start and end times for the intervals
 7.Move the value of time to the end time of that interval
 8.Repeat procedure 3. to 7. till timer reaches the end of the total time
@@ -269,9 +267,9 @@ void Non_PreSJF(Process P[],int number_of_processes){
 3.At each iteration, check which processes have arrived and store them in a temporary array. Decrement burst time of processes properly.
 4.Sort the temporary array on basis of the processes' burst time
 5.Insert the process at the zeroth index, i.e, the first process into the Gantt chart
-	5.1 If the process previously inserted is the same as the next one to be inserted, move interval appropriately
+	5.1 If the process previously inserted is the same as the next one to be inserted, move interval and time appropriately
 6.Assign start and end times for the intervals
-7.Move the value of time to the end time of that interval
+7.Increment value of time by 1
 8.Repeat procedure 3. to 7. till timer reaches the end of the total time
 9.Compute wait, response and turnaround times
 */
@@ -293,7 +291,7 @@ void PreSJF(Process P[],int number_of_processes){
 	double end_times[100];
 
 	//Step 2.
-	//Step 7. time++
+	//Step 7. Note time++ instead of time = end_times[interval-1] as was the case in non-preemptive SJF
 	for(int time=0;time<sum;time++){
 		int flag=0;
 

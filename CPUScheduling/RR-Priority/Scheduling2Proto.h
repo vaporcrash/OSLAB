@@ -38,23 +38,34 @@ void NonPriority(Process P[],int number_of_processes);
 void Priority(Process P[],int number_of_processes);
 void RoundRobin(Process P[],int number_of_processes,int tq);
 
+//Queue used for implementing Round Robin scheduling
+//Used as the Ready Queue
 typedef struct{
 	int front,rear;
 	Process data[100];
 	int capacity,size;
 }Queue;
 
+//Intialise data members of the queue object
 void initialiseQueue(Queue *q);
 
+//Check if queue is full
 int isFull(Queue *q);
 
+//Check if queue is empty
 int isEmpty(Queue *q);
 
+//Enqueue operation
 void enqueue(Queue *q,Process x);
 
+//Dequeue operation
 Process dequeue(Queue *q);
 
+//Display queue
 void display(Queue *q);
+
+//Check if process is in the queue
+int checkQueue(Process p,Queue *q);
 
 void initialiseQueue(Queue *q){
 	q->front=q->rear=-1;
