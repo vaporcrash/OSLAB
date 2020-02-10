@@ -1,0 +1,72 @@
+\documentclass[12pt,a4paper,margin=0.75in]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage{listings}
+\usepackage{xcolor}
+%\usepackage{minted}
+
+\title{\textbf{Department of Computer Science and Engineering}}
+\author{\textbf{S.G.Shivanirudh , 185001146, Semester IV }}
+\date{2020}
+
+%For syntax highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{1,1,1}
+
+%%Sets different parameters
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4
+}
+\lstset{style=mystyle}
+
+\begin{document}
+\maketitle
+\hrule
+\section*{\center{UCS1411 - Operating Systems Laboratory}}
+\hrule 
+\bigskip \bigskip
+
+%Assignment name
+\subsection*{\center{\textbf{Exercise – 2- Simulation of system commands using system calls}}}
+
+%Objective
+\subsection*{\flushleft{\emph{Objective:}}}
+\begin{flushleft}
+To develop a C program to implement the cp, ls, grep commands (with some options) using system calls.
+\end{flushleft}
+
+\subsection*{\flushleft{\emph{Code:}}}
+
+\flushleft{Q1. To develop a C program to implement the cp command using system calls}
+\lstinputlisting[language = C++]{mycp.c}
+\hrule
+\vspace{10mm}
+
+\flushleft{Q2. To develop a C program to implement the ls command using system calls}
+\lstinputlisting[language = C++]{mycp.c}
+\hrule
+\vspace{10mm}
+
+\flushleft{Q3. To develop a C program to implement the grep command using system calls}
+\lstinputlisting[language = C++]{grep.c}
+\hrule
+
+\end{document}
