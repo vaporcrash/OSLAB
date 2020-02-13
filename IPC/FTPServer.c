@@ -16,33 +16,35 @@
 #include<ctype.h>
 
 int main(){
-	int pid;
 
 	printf("\nServer: \n");
 	//Creating shared memory location
-	int shmemid=shmget(146,100,IPC_CREAT|00666);
+	int shmemid=shmget(146,1000,IPC_CREAT|00666);
 
-	char *file_read=(char*)malloc(1000*sizeof(char));
+	//Buffer to read from/write on the shared memory
+	char *file_read=(char*)calloc(1000,sizeof(char));
+	
+	//Sleeping to accept file name as input from client
+	sleep(2);
 
-	pid=fork();
-	if(pid>0){
-		printf("\nParent:\n");
-		int sourcefd=open("source.txt",O_RDWR);
-		if(sourcefd==-1){
-			printf("No source file");
-		}
-		else{
+	//Attaching to shared memory
+	file_read=shmat(shmemid,NULL,0);
+	printf("\nFile to be read: %s\n",file_read);
 
-			file_read=shmat(shmemid,NULL,0);
-			int readfd=read(sourcefd,file_read,1000);
-			file_read[readfd]='\0';
-			printf("\nFile read:\n %s",file_read);
-			wait(NULL);
-			close(sourcefd);
-			shmdt(file_read);
-			//sleep(3);
-		}
+	//Opening file to be read
+	int sourcefd=open(file_read,O_RDONLY);
+	if(sourcefd==-1){
+		printf("No source file");
 	}
-	else;
-	shmctl(shmemid,IPC_RMID,NULL);
+	else{
+		//Reading file contents onto the buffer
+		int readfd=read(sourcefd,file_read,100);
+		file_read[readfd]='\0';
+		printf("\nFile read successfully\n");
+		wait(NULL);
+		close(sourcefd);
+		//Detaching buffer from shared memory
+		shmdt(file_read);
+	}
+	
 }

@@ -1,5 +1,5 @@
-//2.Develop an client / server application for file transfer using shared memory.
-//Client part
+//3. Develop an client/server chat application using shared memory.
+//Server part
 
 #include <sys/ipc.h> 
 #define NULL 0
@@ -15,8 +15,6 @@
 #include<ctype.h>
 
 int main(){
-
-	printf("\nClient: \n");
 	//Creating shared memory location
 	int shmemid=shmget(146,1000,IPC_CREAT|00666);
 	
@@ -25,15 +23,16 @@ int main(){
 
 	//Attaching to shared memory
 	file_read=shmat(shmemid,NULL,0);
-
-	printf("\nEnter file name: ");
-	scanf(" %s",file_read);
 	
-	//Sleeping to get contents of file from server
-	sleep(5);
-	printf("\nFile Contents:\n");
-	printf("\n%s\n",file_read);
+	while(strcmp(file_read,"end")!=0){
 
+		//Sleeping to get contents of file from server
+		printf("\nClient:%s\n",file_read);
+		printf("\nYou: ");scanf(" %[^\n]",file_read);
+		sleep(5);
+		wait(NULL);
+		
+	}
 	//Detaching from shared memory
 	shmdt(file_read);
 
