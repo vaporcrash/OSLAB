@@ -40,3 +40,18 @@ int main(){
 	//Deallocating the acquired memory location
 	shmctl(shmemid,IPC_RMID,NULL);
 }
+
+/*
+Output:
+Client: 
+
+Enter file name: source.txt
+
+File Contents:
+
+asdfgf ;lkjhj
+shiva
+sharvan
+shashu
+siddharth
+*/

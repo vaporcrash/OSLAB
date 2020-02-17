@@ -48,3 +48,12 @@ int main(){
 	}
 	
 }
+
+/*
+Output:
+Server: 
+
+File to be read: source.txt
+
+File read successfully
+*/

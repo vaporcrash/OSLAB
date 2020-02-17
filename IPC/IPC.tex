@@ -1,0 +1,88 @@
+\documentclass[12pt,letterpaper,,margin=0.75in]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage{listings}
+\usepackage{xcolor}
+%\usepackage{minted}
+
+%For syntax highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{1,1,1}
+
+%%Sets different parameters
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4
+}
+\lstset{style=mystyle}
+
+%title
+\title{\textbf{Department of Computer Science and Engineering}}
+\author{\textbf{S.G.Shivanirudh , 185001146, Semester IV }}
+\date{17 February 2020}
+
+\begin{document}
+\maketitle
+\hrule
+\section*{\center{UCS1411 - Operating Systems Laboratory}}
+\hrule 
+\bigskip \bigskip
+
+%Assignment name
+\subsection*{\center{\textbf{Exercise – 5-InterProcess Communications using Shared Memory}}}
+
+%Objective
+\subsection*{\flushleft{\emph{Objective:}}}
+\begin{flushleft}
+Develop the following applications that uses interprocess communication concepts using shared memory.
+\end{flushleft}
+
+%Code
+\subsection*{\flushleft{\emph{Code:}}}
+
+\flushleft{Q1.Develop an application for getting a name in parent and convert it into uppercase in child using shared memory.}
+\lstinputlisting[language=C,firstline=2,lastline=64]{ShMemBasics.c}
+%Output
+\flushleft{\textbf{\emph{Output:}}}
+\lstinputlisting[language=C,firstline=68,lastline=77]{ShMemBasics.c}
+\hrule
+\vspace{10mm}
+
+\flushleft{Q2.Develop an client / server application for file transfer using shared memory.}
+\lstinputlisting[language=C,firstline=4,lastline=42]{FTPClient.c}
+\lstinputlisting[language=C,firstline=4,lastline=50]{FTPServer.c}
+%Output
+\flushleft{\textbf{\emph{Output:}}}
+\lstinputlisting[language=C,firstline=46,lastline=56]{FTPClient.c}
+\lstinputlisting[language=C,firstline=54,lastline=58]{FTPServer.c}
+\hrule
+\vspace{10mm}
+
+\flushleft{Q3. Develop an client/server chat application using shared memory.}
+\lstinputlisting[language=C,firstline=3,lastline=40]{ChatAppClient.c}
+\lstinputlisting[language=C,firstline=3,lastline=41]{ChatAppServer.c}
+%Output
+\flushleft{\textbf{\emph{Output:}}}
+\lstinputlisting[language=C,firstline=45,lastline=63]{ChatAppServer.c}
+\lstinputlisting[language=C,firstline=44,lastline=63]{ChatAppClient.c}
+\hrule
+\vspace{10mm}
+
+\end{document}

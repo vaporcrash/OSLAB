@@ -38,3 +38,27 @@ int main(){
 	//Deallocating the acquired memory location
 	shmctl(shmemid,IPC_RMID,NULL);
 }
+
+/*
+Output:
+
+Server:hi client
+
+You: hi server
+
+Server:hello client
+
+You: how r u
+
+Server:hhow u doingg
+
+You: ggg
+
+Server:how about u
+
+You: im fine
+
+Server:nice
+
+You: end
+*/
