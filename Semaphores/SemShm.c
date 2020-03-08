@@ -117,27 +117,26 @@ int main(){
 	//Semaphore empty
 	int empty_id;
 	int *empty=(int*)malloc(sizeof(int));
-	*empty=SIZE;
+	
 
 	//Semaphore full
 	int full_id;
 	int *full=(int*)malloc(sizeof(int));
-	*full=0;
+	
 
 	//Semaphore mutex
 	int mutex_id;
 	int *mutex=(int*)malloc(sizeof(int));
-	*mutex=1;
+	
 
 	//Buffer to read from/write onto the shared memory
 	char *buff;
 	//Input string
-	char *input_string=(char*)malloc(20);
+	char *input_string=(char*)malloc(20*sizeof(char));
 	
 	//Buffer counters in producer and consumer respectively
 	int pctr=0,cctr=0;
 
-	int i=0;
 	pid_t temp_pid;
 
 	//Acquiring memory for shared memory
@@ -152,26 +151,37 @@ int main(){
 	empty = shmat(empty_id,(int*)0,0);
 	mutex=shmat(mutex_id,(int*)0,0);
 
+	*empty=SIZE;
+	*full=0;
+	*mutex=1;
+
 	printf("\n Main Process Started \n");
 	printf("\nEnter string: ");scanf(" %s",input_string);
 	printf("Entered string : %s",input_string);
 	
 	temp_pid=fork();
 	if(temp_pid>0){
+		printf("\nProducer Empty: %d Full: %d Mutex: %d \n",*empty,*full,*mutex);
 		produce(input_string,empty,full,mutex,&pctr,buff);
+		printf("\n P:%d\n",*full);
 	}
 	else{ 
-		sleep(2);
 		printf("\n C:%d\n",*full);
-		sleep(2);
 		consume(input_string,empty,full,mutex,&cctr,buff);
 	}
 	
 	//Detaching buffer from memory location 
 	shmdt(buff);
+	shmdt(mutex);
+	shmdt(empty);
+	shmdt(full);
 
 	//Destroying acquired location
 	shmctl(shmid, IPC_RMID, NULL);
+	shmctl(mutex_id, IPC_RMID, NULL);
+	shmctl(empty_id, IPC_RMID, NULL);
+	shmctl(full_id, IPC_RMID, NULL);
+
 
 	printf("\n Main process exited \n\n");
 	return(0);
