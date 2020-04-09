@@ -1,0 +1,72 @@
+\documentclass[12pt,letterpaper,,margin=0.75in]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage{listings}
+\usepackage{xcolor}
+%\usepackage{minted}
+
+%For syntax highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{1,1,1}
+
+%%Sets different parameters
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=4
+}
+\lstset{style=mystyle}
+
+%title
+\title{\textbf{Department of Computer Science and Engineering}}
+\author{\textbf{S.G.Shivanirudh , 185001146, Semester IV }}
+\date{19 March 2020}
+
+\begin{document}
+\maketitle
+\hrule
+\section*{\center{UCS1411 - Operating Systems Laboratory}}
+\hrule 
+\bigskip \bigskip
+
+%Assignment name
+\subsection*{\center{\textbf{Lab Exercise 12: File Organisation Techniques}}}
+
+%Objective
+\subsection*{\flushleft{\emph{Objective:}}}
+\begin{flushleft}
+Develop a C program to implement the following file organisation techniques:
+a) Single level Directory
+b) Two level Directory
+c) Hierarchical Structure
+d) DAG
+\end{flushleft}
+
+%Code
+\subsection*{\flushleft{\emph{Code:}}}
+
+\flushleft{Q.To write a C program to implement the mentioned file organisation techniques.}
+\lstinputlisting[language=C,lastline=706]{FileOrg.c}
+%Output
+\flushleft{\textbf{\emph{Output:}}}
+\lstinputlisting[language=C,firstline=710,lastline=1173]{FileOrg.c}
+\hrule
+\vspace{10mm}
+
+\end{document}
